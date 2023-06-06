@@ -1,0 +1,4 @@
+.header__menu {
+    grid-area: menu;
+    box-sizing: border-box;
+}

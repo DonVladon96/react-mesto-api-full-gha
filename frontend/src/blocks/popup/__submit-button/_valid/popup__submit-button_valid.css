@@ -1,0 +1,5 @@
+.popup__submit-button_valid {
+	background-color: black;
+	border-radius: 2px;
+	color: #fff;
+}
