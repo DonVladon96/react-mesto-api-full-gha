@@ -42,7 +42,6 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "https://donvladon96.github.io/react-mesto-auth/index.html",
   "devDependencies": {
     "eslint-config-prettier": "^8.8.0",
     "gh-pages": "^5.0.0",
