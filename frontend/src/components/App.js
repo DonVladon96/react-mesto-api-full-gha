@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 
 import Loader from '../Loader/Loader';
-import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
 
@@ -18,7 +17,6 @@ import WrapperForLoader from '../Loader/WrapperForLoader';
 import Login from './Login';
 import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
-import { message } from 'antd';
 import auth from '../utils/auth';
 import InfoTooltip from './InfoTooltip';
 
