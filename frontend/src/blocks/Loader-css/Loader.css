@@ -1,0 +1,15 @@
+.Loader {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    margin: 0 auto;
+    top: 230px;
+    left: 600px;
+}
+
+@media screen and (max-width: 980px) {
+    .Loader {
+        top: calc(100% - 90%);
+        left: calc(100% - 90%);
+    }
+}

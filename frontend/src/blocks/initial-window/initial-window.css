@@ -1,0 +1,7 @@
+.initial-window {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 358px;
+    margin-top: 60px;
+}
