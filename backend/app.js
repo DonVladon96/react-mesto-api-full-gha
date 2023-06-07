@@ -2,8 +2,9 @@ const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
-const cors = require('cors');
+
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const router = require('./routes');
 const errorMiddlewares = require('./middlewares/errorMiddlewares');
 
