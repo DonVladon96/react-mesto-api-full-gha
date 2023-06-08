@@ -11,6 +11,6 @@
 
 IP-адрес x.x.x.x
 
-Frontend https://...
+Frontend [https://...](https://donvladon.nomoredomains.rocks/sign-in)
 
-Backend https://...
+Backend [https://...](https://api.donvladon.nomoredomains.rocks/)
