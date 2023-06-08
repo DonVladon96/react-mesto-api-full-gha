@@ -1,0 +1,10 @@
+.body-container {
+	background-color: #000000;
+	color: #fff;
+	min-width: 320px;
+	width: 100%;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	margin: 0 auto;
+}
