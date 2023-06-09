@@ -1,18 +1,20 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const validator = require('validator');
 const { expression } = require('../utils/constants');
+const ErrorUnauthorized = require('../utils/errors/Unauthorized-error-401');
 
 const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      default: 'Жак-Ивень Кустов',
+      default: 'Don Vladon',
       minlength: [2, 'Минимальная длинна поля - 2 символа.'],
       maxlength: [30, 'Максимальная длинна поля - 30 символов.'],
     },
     about: {
       type: String,
-      default: 'исследователь',
+      default: 'web-developer',
       minlength: [2, 'Минимальная длинна поля - 2 символа.'],
       maxlength: [30, 'Максимальная длинна поля - 30 символов.'],
     },
@@ -40,5 +42,21 @@ const userSchema = new mongoose.Schema(
     },
   },
 );
+
+userSchema.statics.findUserByCredentials = function (email, password) {
+  return this.findOne({ email }).select('+password')
+    .then((user) => {
+      if (!user) {
+        throw new ErrorUnauthorized('Неправильные почта или пароль');
+      }
+      return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if (!matched) {
+            throw new ErrorUnauthorized('Неправильные почта или пароль');
+          }
+          return user;
+        });
+    });
+};
 
 module.exports = mongoose.model('user', userSchema);

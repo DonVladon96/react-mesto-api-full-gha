@@ -10,14 +10,13 @@ import EditAvatarPopup from './EditAvatarPopup';
 import PopupWithVerification from './PopupWithVerification';
 import EditProfilePopup from './EditProfilePopup';
 import AddPlacePopup from './AddPlacePopup';
-
-import api from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import WrapperForLoader from '../Loader/WrapperForLoader';
 import Login from './Login';
 import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
-import auth from '../utils/auth';
+import Api from "../utils/Api";
+import auth from '../utils/Auth';
 import InfoTooltip from './InfoTooltip';
 
 function App(props) {
@@ -29,7 +28,6 @@ function App(props) {
 	const [isCardOpen, setCardOpen] = useState(false);
 	const [isSelectedCard, setSelectedCard] = useState({});
 	const [isLoading, setIsLoading] = useState(true);
-
 	// Создайте стейт currentUser в корневом компоненте
 	const [currentUser, setCurrentUser] = useState({});
 
@@ -40,16 +38,24 @@ function App(props) {
 	const [email, setEmail] = useState('');
 	const [isInfoMessage, setInfoMessage] = useState(null);
 	const navigate = useNavigate();
+	const api = new Api({
+		url: "https://api.donvladon.nomoredomains.rocks/",
+		headers: {
+			"Content-type": "application/json",
+			authorization: `Bearer ${localStorage.getItem('jwt')}`,
+		},
+	});
 
 	useEffect(() => {
 		if (isLoggedIn) {
 			setIsLoading(true);
 
-			Promise.all([api.getUserInfo(), api.getInitialCards()])
+			Promise.all([Api.getUserInfo(), Api.getInitialCards()])
 				.then((data) => {
 					const [userData, cardsData] = data;
 
 					setCurrentUser(userData);
+					setEmail(userData.email);
 
 					setCard(cardsData);
 					setIsLoading(false);
@@ -63,15 +69,17 @@ function App(props) {
 		}
 	}, [isLoggedIn]);
 
+
 	useEffect(() => {
-		const token = localStorage.getItem('token');
-		if (token) {
+		const jwt = localStorage.getItem('jwt');
+
+		if (jwt) {
 			auth
-				.checkToken(token)
+				.checkToken(jwt)
 				.then((res) => {
-					setEmail(res.data.email);
-					setIsLoggedIn(true);
-					navigate('/');
+					if (res) {
+						setIsLoggedIn(true);
+					}
 				})
 				.catch((err) => {
 					console.log(
@@ -80,20 +88,26 @@ function App(props) {
 				})
 				.finally(setIsLoading(true));
 		}
-	}, [navigate]);
+	}, []);
 
-	function handleUpdateUser({ name, about }) {
+	useEffect(() => {
+		if (isLoggedIn) {
+			navigate('/');
+		}
+	}, [isLoggedIn, navigate])
+
+	function handleUpdateUser(values) {
 		api
-			.parseUserInfo({ name, about })
+			.parseUserInfo({name: values.name, about: values.about})
 			.then((response) => {
 				setCurrentUser(response);
-				setIsLoading(false);
+				setIsLoading(true);
 				closeAllPopups();
 			})
 			.catch((err) => {
 				console.log(`Ошибка: ${err}`);
 			})
-			.finally(setIsLoading(true));
+			.finally(setIsLoading(false));
 	}
 
 	function handleCardLike(card) {
@@ -111,19 +125,20 @@ function App(props) {
 	}
 
 	function handleCardDelete(event) {
+		setIsLoading(true);
+
 		event.preventDefault();
 
 		api
 			.deleteCard(currentCard._id)
 			.then(() => {
 				setCard(cards.filter((i) => i !== currentCard));
-				setIsLoading(false);
 				closeAllPopups();
 			})
 			.catch((err) => {
 				console.log(`Ошибка: ${err}`);
 			})
-			.finally(setIsLoading(true));
+			.finally(() => setIsLoading(true));
 	}
 
 	//описываю функции для всех изменений начального состояния
@@ -131,32 +146,34 @@ function App(props) {
 		setEditProfilePopupOpen(true);
 	}
 
-	function handleChangeAvatar({ avatar }) {
+	function handleChangeAvatar(values) {
+		setIsLoading(true);
+
 		api
-			.updateUserAvatar({ avatar })
+			.updateUserAvatar({ avatar: values.avatar })
 			.then((res) => {
 				setCurrentUser(res);
-				setIsLoading(false);
 				closeAllPopups();
 			})
 			.catch((err) => {
 				console.log(`Ошибка: ${err}`);
 			})
-			.finally(setIsLoading(true));
+			.finally(() => setIsLoading(false));
 	}
 
-	function handleAddPlacePopup({ name, link }) {
+	function handleAddPlacePopup(values) {
+		setIsLoading(false);
+
 		api
-			.createCard({ name, link })
+			.createCard({ name: values.name, link: values.link})
 			.then((newCard) => {
 				setCard([newCard, ...cards]);
-				setIsLoading(false);
 				closeAllPopups();
 			})
 			.catch((err) => {
 				console.log(`Ошибка: ${err}`);
 			})
-			.finally(setIsLoading(true));
+			.finally(() => setIsLoading(true));
 	}
 
 	function handleAddPlaceClick() {
@@ -187,13 +204,11 @@ function App(props) {
 		setSelectedCard(cardsData);
 	}
 
-	function handleLogin(inputs, restartForm) {
-
-
+	function handleLogin(email, password, restartForm) {
 		auth
-			.authorize(inputs)
+			.authorize(email, password)
 			.then((res) => {
-				if (res.token) localStorage.setItem('token', res.token);
+				localStorage.setItem('jwt', res.token);
 				restartForm();
 				navigate('/');
 				setIsLoggedIn(true);
@@ -208,8 +223,10 @@ function App(props) {
 	}
 
 	function handleLogout() {
-		localStorage.removeItem('token');
 		setIsLoggedIn(false);
+		setEmail('');
+		localStorage.removeItem('jwt');
+		navigate('/sign-in');
 	}
 
 	function handleShowInfoMessage(message) {
@@ -225,9 +242,9 @@ function App(props) {
 		}
 	}
 
-	function handleRegister(inputs, restartForm) {
+	function handleRegister(email, password, restartForm) {
 		auth
-			.register(inputs)
+			.register(email, password)
 			.then((res) => {
 				handleShowInfoMessage({
 					text: 'Вы успешно зарегистрировались!',

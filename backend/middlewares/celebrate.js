@@ -5,7 +5,7 @@ const cardJoiIdTemplate = { cardId: Joi.string().length(24).hex().required() };
 
 const validateID = celebrate({
   params: Joi.object().keys({
-    id: Joi.string().alphanum().length(24).hex(),
+    userId: Joi.string().hex().length(24).required(),
   }),
 });
 
@@ -25,7 +25,7 @@ const validateUpdateAvatar = celebrate({
 const loginValidate = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
   }),
 });
 

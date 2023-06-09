@@ -1,6 +1,6 @@
-import apiConfig from './apiConfig';
 
-class Api {
+
+export default class Api {
 	constructor({ baseUrl, headers }) {
 		this._baseUrl = baseUrl;
 		this._headers = headers;
@@ -8,17 +8,9 @@ class Api {
 
 	getUserInfo() {
 		return fetch(`${this._baseUrl}users/me`, {
-			method: 'GET',
 			headers: this._headers
 		})
-			.then((response) => {
-				if (response.ok) {
-					return response.json();
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+			.then((res) => this._getResponse(res))
 	}
 
 	parseUserInfo({ name, about }) {
@@ -27,28 +19,14 @@ class Api {
 			method: 'PATCH',
 			body: JSON.stringify({ name, about })
 		})
-			.then((response) => {
-				if (response.ok) {
-					return response.json();
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+			.then(this._getResponse);
 	}
 
 	getInitialCards() {
 		return fetch(`${this._baseUrl}cards`, {
 			headers: this._headers
 		})
-			.then((res) => {
-				if (res.ok) {
-					return res.json();
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+			.then(this._getResponse)
 	}
 
 	updateUserAvatar({ avatar }) {
@@ -57,14 +35,7 @@ class Api {
 			method: 'PATCH',
 			body: JSON.stringify({ avatar })
 		})
-			.then((response) => {
-				if (response.ok) {
-					return response.json();
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+			.then(this._getResponse);
 	}
 
 	updateUserInfo(userInfo) {
@@ -83,20 +54,13 @@ class Api {
 			});
 	}
 
-	createCard(cardInfo) {
+	createCard({name, link}) {
 		return fetch(`${this._baseUrl}cards`, {
 			method: 'POST',
 			headers: this._headers,
-			body: JSON.stringify(cardInfo)
+			body: JSON.stringify({name, link})
 		})
-			.then((response) => {
-				if (response.ok) {
-					return response.json();
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+			.then(this._getResponse)
 	}
 
 	deleteCard(cardId) {
@@ -119,14 +83,7 @@ class Api {
 			method: isLiked ? 'PUT' : 'DELETE',
 			headers: this._headers
 		})
-			.then((response) => {
-				if (response.ok) {
-					return response.json();
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+			.then(this._getResponse);
 	}
 
 	deleteLike(id) {
@@ -143,8 +100,12 @@ class Api {
 				console.log(err);
 			});
 	}
+
+	_getResponse(res) {
+		if (!res.ok) {
+			return Promise.reject(`Error: ${res.status} ${res.statusText}`);
+		}
+		return res.json();
+	}
 }
 
-const api = new Api(apiConfig);
-
-export default api;
