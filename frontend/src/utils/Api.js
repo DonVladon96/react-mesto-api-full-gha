@@ -13,8 +13,8 @@ export default class Api {
 
 	createCard({name, link}) {
 		return fetch(`${this._url}/cards`, {
-			method: 'POST',
 			headers: this._headers,
+			method: "POST",
 			body: JSON.stringify({ name, link })
 		})
 			.then(this._getResponse)
@@ -22,23 +22,23 @@ export default class Api {
 
 	deleteCard(id) {
 		return fetch(`${this._url}/cards/${id}`, {
-			method: 'DELETE',
-			headers: this._headers
+			headers: this._headers,
+			method: "DELETE",
 		})
-			.then(this._getResponse);
+			.then(this._getResponse)
 	}
 
 	deleteLike(id, isLiked) {
-		return fetch(`${this._url}/cards/likes/${id}`, {
+		return fetch(`${this._url}/cards/${id}/likes`, {
+			headers: this._headers,
 			method: isLiked ? "PUT" : "DELETE",
-			headers: this._headers
 		})
-			.then(this._getResponse);
+			.then(this._getResponse)
 	}
 
 	getUserInfo() {
 		return fetch(`${this._url}/users/me`, {
-			headers: this._headers
+			headers: this._headers,
 		})
 			.then((res) => this._getResponse(res))
 	}
@@ -46,30 +46,20 @@ export default class Api {
 	parseUserInfo({ name, about }) {
 		return fetch(`${this._url}/users/me`, {
 			headers: this._headers,
-			method: 'PATCH',
+			method: "PATCH",
 			body: JSON.stringify({ name, about })
 		})
-			.then(this._getResponse);
+			.then(this._getResponse)
 	}
 
 	updateUserAvatar({ avatar }) {
 		return fetch(`${this._url}/users/me/avatar`, {
 			headers: this._headers,
-			method: 'PATCH',
+			method: "PATCH",
 			body: JSON.stringify({ avatar })
 		})
-			.then(this._getResponse);
+			.then(this._getResponse)
 	}
-
-	updateUserInfo(userInfo) {
-		return fetch(`${this._url}/users/me`, {
-			method: 'PATCH',
-			headers: this._headers,
-			body: JSON.stringify(userInfo)
-		})
-			.then(this._getResponse);
-	}
-
 	addLike(id, isLiked) {
 		return fetch(`${this._url}/cards/${id}/likes/`, {
 			method: isLiked ? 'PUT' : 'DELETE',

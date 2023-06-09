@@ -268,9 +268,7 @@ function App(props) {
 				{/*	email={email}*/}
 				{/*/>*/}
 				<Routes>
-					<Route
-						path='/sign-in'
-						element={
+					<Route path='/sign-in' element={
 							<Login
 								handleShowInfoMessage={handleShowInfoMessage}
 								onLogin={handleLogin}
@@ -285,30 +283,28 @@ function App(props) {
 					></Route>
 					<Route path='/' element={
 						<>
-							<ProtectedRoute loggerIn={isLoggedIn} >
-								{isLoading ? (
-									<WrapperForLoader>
-										<Loader></Loader>
-									</WrapperForLoader>
-								) : (
-									<Main
-										openProfileEdit={handleEditProfileClick}
-										addButtonCard={handleAddPlaceClick}
-										openUserAvatar={handleEditAvatarClick}
-										openDeleteConfirm={handleConfirmDeletePopup}
-										openCard={handleOpenCardClick}
-										cardLike={handleCardLike}
-										cards={cards}
-										email={email}
-										onLogout={handleLogout}
-										loggedIn={isLoggedIn}
-									></Main>
-								)}
-							</ProtectedRoute>
+							<ProtectedRoute
+								component={Main}
+								openProfileEdit={handleEditProfileClick}
+								addButtonCard={handleAddPlaceClick}
+								openUserAvatar={handleEditAvatarClick}
+								openDeleteConfirm={handleConfirmDeletePopup}
+								openCard={handleOpenCardClick}
+								cardLike={handleCardLike}
+								cards={cards}
+								email={email}
+								onLogout={handleLogout}
+								loggedIn={isLoggedIn}
+							/>
+								{/*Лоадер пока закомментирую*/}
+								{/*{isLoading ? (*/}
+								{/*	<WrapperForLoader>*/}
+								{/*		<Loader></Loader>*/}
+								{/*	</WrapperForLoader>*/}
+								{/*) : (<Main></Main>)}*/}
 							<Footer />
 						</>
-						}
-					></Route>
+						}/>
 				</Routes>
 				<EditAvatarPopup
 					isOpen={isEditAvatarPopupOpen}
