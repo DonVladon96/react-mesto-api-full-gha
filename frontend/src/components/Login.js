@@ -1,29 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header';
+import useFormValidation from '../utils/validations'
 
-function Login({ handleShowInfoMessage, onLogin }) {
-	const startValues = {
-		email: '',
-		password: ''
-	};
-
-	const [inputs, setInputs] = useState(startValues);
-
-
-	function handleChangeValue(evt) {
-		const value = evt.target.value;
-		const name = evt.target.name;
-		setInputs((state) => ({ ...state, [name]: value }));
-	}
+function Login({  onLogin }) {
+	const { values, errors , onChange } = useFormValidation();
 
 	function handleSubmitValue(evt) {
 		evt.preventDefault();
-		onLogin(inputs, restartForm);
-	}
 
-	function restartForm() {
-		setInputs({ ...startValues });
+		onLogin(values.email, values.password);
 	}
 
 	return (
@@ -44,18 +30,19 @@ function Login({ handleShowInfoMessage, onLogin }) {
 							type='email'
 							className='initial-window__input'
 							placeholder='Email'
-							value={inputs.email}
+							value={values.email || ''}
 							name='email'
-							onChange={handleChangeValue}
+							onChange={onChange}
 							required
 						/>
+						<span className='initial-window__input-error'>{errors.email || ''}</span>
 						<input
 							type='password'
 							className='initial-window__input'
 							name='password'
 							placeholder='password'
-							value={inputs.password}
-							onChange={handleChangeValue}
+							value={values.password || ''}
+							onChange={onChange}
 							required
 						/>
 						<button type='submit' className='initial-window__submit-button'>

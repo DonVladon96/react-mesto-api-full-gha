@@ -2,28 +2,12 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header';
 
-function Register({ handleShowInfoMessage, onRegister }) {
-	const startValues = {
-		email: '',
-		password: ''
-	};
-
-	const [inputs, setInputs] = useState(startValues);
-
-
-	function handleChangeValue(evt) {
-		const value = evt.target.value;
-		const name = evt.target.name;
-		setInputs((state) => ({ ...state, [name]: value }));
-	}
+function Register({  onRegister }) {
+	const { values, errors, onChange } = useFormValidation();
 
 	function handleSubmitValue(evt) {
 		evt.preventDefault();
-		onRegister(inputs, restartForm);
-	}
-
-	function restartForm() {
-		setInputs({ ...startValues });
+		onRegister(values.email, values.password);
 	}
 
 	return (
@@ -45,20 +29,22 @@ function Register({ handleShowInfoMessage, onRegister }) {
 							type='email'
 							className='initial-window__input'
 							placeholder='Email'
-							value={inputs.email}
+							value={values.email || ''}
 							name='email'
-							onChange={handleChangeValue}
+							onChange={onChange}
 							required
 						/>
+						<span className='initial-window__input-error'>{errors.email || ''}</span>
 						<input
 							type='password'
 							className='initial-window__input'
 							placeholder='Password'
 							name='password'
-							value={inputs.password}
-							onChange={handleChangeValue}
+							value={values.password || ''}
+							onChange={onChange}
 							required
 						/>
+						<span className='initial-window__input-error'>{errors.email || ''}</span>
 						<button type='submit' className='initial-window__submit-button'>
 							Регистрация
 						</button>

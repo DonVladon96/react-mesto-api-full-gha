@@ -60,6 +60,7 @@
 @import url(blocks/initial-window/__title/initial-window__title.css);
 @import url(blocks/initial-window/__form/initial-window__form.css);
 @import url(blocks/initial-window/__input/initial-window__input.css);
+@import url(blocks/initial-window/__input-error/initial-window__input-error.css);
 @import url(blocks/initial-window/__submit-button/initial-window__submit-button.css);
 @import url(blocks/initial-window/__span-text/initial-window__span-text.css);
 @import url(./blocks/initial-window/__link/initial-window__link.css);
