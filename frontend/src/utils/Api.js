@@ -5,14 +5,14 @@ export default class Api {
 	}
 
 	getInitialCards() {
-		return fetch(`${this._url}cards`, {
+		return fetch(`${this._url}/cards`, {
 			headers: this._headers
 		})
 			.then(this._getResponse)
 	}
 
 	createCard({name, link}) {
-		return fetch(`${this._url}cards`, {
+		return fetch(`${this._url}/cards`, {
 			method: 'POST',
 			headers: this._headers,
 			body: JSON.stringify({ name, link })
@@ -21,7 +21,7 @@ export default class Api {
 	}
 
 	deleteCard(id) {
-		return fetch(`${this._url}cards/${id}`, {
+		return fetch(`${this._url}/cards/${id}`, {
 			method: 'DELETE',
 			headers: this._headers
 		})
@@ -29,7 +29,7 @@ export default class Api {
 	}
 
 	deleteLike(id, isLiked) {
-		return fetch(`${this._url}cards/likes/${id}`, {
+		return fetch(`${this._url}/cards/likes/${id}`, {
 			method: isLiked ? "PUT" : "DELETE",
 			headers: this._headers
 		})
@@ -37,14 +37,14 @@ export default class Api {
 	}
 
 	getUserInfo() {
-		return fetch(`${this._url}users/me`, {
+		return fetch(`${this._url}/users/me`, {
 			headers: this._headers
 		})
 			.then((res) => this._getResponse(res))
 	}
 
 	parseUserInfo({ name, about }) {
-		return fetch(`${this._url}users/me`, {
+		return fetch(`${this._url}/users/me`, {
 			headers: this._headers,
 			method: 'PATCH',
 			body: JSON.stringify({ name, about })
@@ -53,7 +53,7 @@ export default class Api {
 	}
 
 	updateUserAvatar({ avatar }) {
-		return fetch(`${this._url}users/me/avatar`, {
+		return fetch(`${this._url}/users/me/avatar`, {
 			headers: this._headers,
 			method: 'PATCH',
 			body: JSON.stringify({ avatar })
@@ -62,7 +62,7 @@ export default class Api {
 	}
 
 	updateUserInfo(userInfo) {
-		return fetch(`${this._url}users/me`, {
+		return fetch(`${this._url}/users/me`, {
 			method: 'PATCH',
 			headers: this._headers,
 			body: JSON.stringify(userInfo)
@@ -71,7 +71,7 @@ export default class Api {
 	}
 
 	addLike(id, isLiked) {
-		return fetch(`${this._url}cards/${id}/likes/`, {
+		return fetch(`${this._url}/cards/${id}/likes/`, {
 			method: isLiked ? 'PUT' : 'DELETE',
 			headers: this._headers
 		})

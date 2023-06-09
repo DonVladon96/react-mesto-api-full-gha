@@ -20,6 +20,7 @@ import Api from "../utils/Api";
 import auth from '../utils/Auth';
 
 import InfoTooltip from './InfoTooltip';
+import Header from "./Header";
 
 function App(props) {
 	//использую хуки, чтобы задать начальное состояние(false)
@@ -37,7 +38,7 @@ function App(props) {
 
 	const [currentCard, setCurrentCard] = useState({});
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [email, setEmail] = useState(null);
+	const [email, setEmail] = useState('');
 	const [isInfoMessage, setInfoMessage] = useState(null);
 	const navigate = useNavigate();
 
@@ -56,6 +57,10 @@ function App(props) {
 				setIsLoggedIn(true);
 				setInfoMessage('Вы успешно вошли!')
 				navigate('/');
+				handleShowInfoMessage({
+					text: 'Вы успешно зарегистрировались!',
+					isSuccess: true
+				})
 			})
 			.catch(() => {
 				const text = 'Что-то пошло не так! Попробуйте еще раз.';
@@ -103,6 +108,7 @@ function App(props) {
 				.finally(setIsLoading(true));
 		}
 	}, []);
+
 
 	useEffect(() => {
 		if (isLoggedIn) {
@@ -258,6 +264,9 @@ function App(props) {
 	return (
 		<CurrentUserContext.Provider value={currentUser}>
 			<div className='main-page'>
+				{/*<Header*/}
+				{/*	email={email}*/}
+				{/*/>*/}
 				<Routes>
 					<Route
 						path='/sign-in'
@@ -276,7 +285,7 @@ function App(props) {
 					></Route>
 					<Route path='/' element={
 						<>
-							<ProtectedRoute component={Main} >
+							<ProtectedRoute loggerIn={isLoggedIn} >
 								{isLoading ? (
 									<WrapperForLoader>
 										<Loader></Loader>
