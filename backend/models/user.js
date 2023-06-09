@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const bcrypt = require('bcrypt');
 const validator = require('validator');
 const { expression } = require('../utils/constants');
 const ErrorUnauthorized = require('../utils/errors/Unauthorized-error-401');
@@ -40,6 +41,9 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Поле password обязательно к заполнению.'],
       select: false,
     },
+  },
+  {
+    versionKey: false,
   },
 );
 

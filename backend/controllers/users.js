@@ -1,11 +1,11 @@
-const bcrypt = require('bcryptjs');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const http2 = require('http2');
 const User = require('../models/user');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 const {
-  ErrorUnauthorized,
   NotFoundError404,
   BadRequestError,
   ConflictError,

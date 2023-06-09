@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 
 import Loader from '../Loader/Loader';
 import Main from './Main';
@@ -15,8 +15,10 @@ import WrapperForLoader from '../Loader/WrapperForLoader';
 import Login from './Login';
 import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
+
 import Api from "../utils/Api";
 import auth from '../utils/Auth';
+
 import InfoTooltip from './InfoTooltip';
 
 function App(props) {
@@ -26,7 +28,7 @@ function App(props) {
 	const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
 	const [isConfirmDeletePopup, setConfirmDeletePopup] = useState(false);
 	const [isCardOpen, setCardOpen] = useState(false);
-	const [isSelectedCard, setSelectedCard] = useState({});
+	const [isSelectedCard, setSelectedCard] = useState({name: '', link: ''});
 	const [isLoading, setIsLoading] = useState(true);
 	// Создайте стейт currentUser в корневом компоненте
 	const [currentUser, setCurrentUser] = useState({});
@@ -40,7 +42,7 @@ function App(props) {
 	const navigate = useNavigate();
 
 	const api = new Api({
-		url: "https://api.donvladon.nomoredomains.rocks/",
+		url: "https://api.donvladon.nomoredomains.rocks",
 		headers: {
 			"Content-type": "application/json",
 			authorization: `Bearer ${localStorage.getItem('jwt')}`,
@@ -64,15 +66,15 @@ function App(props) {
 			});
 	}
 
-	function handleRegister(email, password, restartForm) {
+	function handleRegister(email, password) {
 		auth.register(email, password)
 			.then((res) => {
+				navigate('/sign-in');
 				handleShowInfoMessage({
 					text: 'Вы успешно зарегистрировались!',
 					isSuccess: true
 				});
-				restartForm();
-				navigate('/sign-in');
+
 			})
 			.catch((error) => {
 				const text = 'Что-то пошло не так! Попробуйте еще раз.';
@@ -110,8 +112,6 @@ function App(props) {
 
 	useEffect(() => {
 		if (isLoggedIn) {
-			setIsLoading(true);
-
 			Promise.all([api.getUserInfo(), api.getInitialCards()])
 				.then((data) => {
 					const [userData, cardsData] = data;
@@ -120,14 +120,10 @@ function App(props) {
 					setEmail(userData.email);
 
 					setCard(cardsData);
-					setIsLoading(true);
 				})
 				.catch((err) => {
 					console.log(`Ошибка: ${err}`);
 				})
-				.finally(() => {
-					setIsLoading(false);
-				});
 		}
 	}, [isLoggedIn]);
 
@@ -171,6 +167,7 @@ function App(props) {
 		setEditAvatarPopupOpen(false);
 		setConfirmDeletePopup(false);
 		setInfoMessage(null);
+		setSelectedCard({ name: '', link: '' });
 	}
 
 	function handleCardLike(card) {
@@ -273,12 +270,13 @@ function App(props) {
 					></Route>
 					<Route
 						path='/sign-up'
-						element={<Register handleShowInfoMessage={handleShowInfoMessage}
+						element={<Register
+							 handleShowInfoMessage={handleShowInfoMessage}
 										   onRegister={handleRegister} />}
 					></Route>
 					<Route path='/' element={
 						<>
-							<ProtectedRoute >
+							<ProtectedRoute component={Main} >
 								{isLoading ? (
 									<WrapperForLoader>
 										<Loader></Loader>
@@ -294,6 +292,7 @@ function App(props) {
 										cards={cards}
 										email={email}
 										onLogout={handleLogout}
+										loggedIn={isLoggedIn}
 									></Main>
 								)}
 							</ProtectedRoute>
@@ -331,10 +330,6 @@ function App(props) {
 					isClosed={closeAllPopups}
 					onSubmit={handleCardDelete}
 				></PopupWithVerification>{' '}
-				{/*<InfoToolTip*/}
-				{/*	message={isInfoMessage}*/}
-				{/*	onClose={closeAllPopups}*/}
-				{/*></InfoToolTip>{' '}*/}
 				<InfoTooltip
 					message={isInfoMessage}
 					isClosed={closeAllPopups}
