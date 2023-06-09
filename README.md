@@ -9,7 +9,7 @@
 
 ## Ссылки на проект
 
-IP-адрес x.x.x.x
+IP-адрес 62.84.127.180
 
 Frontend [https://...](https://donvladon.nomoredomains.rocks/sign-in)
 
