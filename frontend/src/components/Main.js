@@ -4,14 +4,14 @@ import Card from './Card';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import Header from './Header';
 
-function Main(props) {
+function Main({openUserAvatar, openProfileEdit, email, onLogout, addButtonCard, cards, openCard,openDeleteConfirm,cardLike }) {
 	const currentUser = useContext(CurrentUserContext);
 
 	return (
 		<>
 			<Header isWrapperForHeader={true}>
-				<p className='header__menu-item'>{props.email}</p>
-				<button href='#' className='header__menu-item' onClick={props.onLogout}>
+				<p className='header__menu-item'>{email}</p>
+				<button href='#' className='header__menu-item' onClick={onLogout}>
 					Выйти
 				</button>
 			</Header>
@@ -20,7 +20,7 @@ function Main(props) {
 				<section className='profile section section_size_narrow'>
 					<div
 						className='profile__avatar-container'
-						onClick={props.openUserAvatar}
+						onClick={openUserAvatar}
 					>
 						<img
 							src={currentUser.avatar}
@@ -35,7 +35,7 @@ function Main(props) {
 								type='button'
 								aria-label='Редактировать профиль'
 								className='profile__edit'
-								onClick={props.openProfileEdit}
+								onClick={openProfileEdit}
 							/>
 						</div>
 						<p className='profile__aboute'>{currentUser.about}</p>
@@ -44,18 +44,18 @@ function Main(props) {
 						type='button'
 						aria-label='Добавить новую картинку'
 						className='profile__add-button'
-						onClick={props.addButtonCard}
+						onClick={addButtonCard}
 					/>
 				</section>
 				{/* создать кард.жс */}
 				<section className='elements'>
-					{props.cards.map((card) => (
+					{cards.map((card) => (
 						<Card
 							key={card._id}
 							card={card}
-							openCard={props.openCard}
-							deleteCard={props.openDeleteConfirm}
-							cardLike={props.cardLike}
+							openCard={openCard}
+							deleteCard={openDeleteConfirm}
+							cardLike={cardLike}
 						/>
 					))}
 				</section>
