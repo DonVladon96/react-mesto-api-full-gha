@@ -1,43 +1,33 @@
 class Auth {
-	constructor({baseUrl}) {
-		this._baseUrl = baseUrl;
-	}
-
-	_getErrorFromServer(res) {
-		return res.json().then((res) => {
-			throw new Error(res.message);
-		});
-	}
-
-	register( email, password ) {
-		const url = `${this._baseUrl}/signup`;
-		return fetch(url, {
-			method: 'POST',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ email, password })
-		}).then(this._getResponse);
+	constructor({ url }) {
+		this._url = url;
 	}
 
 	authorize( email, password ) {
-		const url = `${this._baseUrl}/signin`;
-		return fetch(url, {
+		return fetch(`${this._url}/signin`, {
 			method: "POST",
 			headers: {
 				'Accept': 'application/json',
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({ email, password }),
-		})
-			.then(this._getResponse);
+		}).then(this._getResponse);
+	}
+
+	register( email, password ) {
+		return fetch(`${this._url}/signup`, {
+			method: "POST",
+			headers: {
+				'Accept': 'application/json',
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ email, password }),
+		}).then(this._getResponse);
 	}
 
 	checkToken(jwt) {
-		const url = `${this._baseUrl}/users/me`;
-		return fetch(url, {
-			method: 'GET',
+		return fetch(`${this._url}/users/me`, {
+			method: "GET",
 			headers: {
 				'Accept': 'application/json',
 				"Content-Type": "application/json",
@@ -57,6 +47,6 @@ class Auth {
 
 
 
-const auth = new Auth({url: 'https://api.donvladon.nomoredomains.rocks/' });
+const auth = new Auth({ url: 'https://api.donvladon.nomoredomains.rocks/' });
 
 export default auth;
