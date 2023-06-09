@@ -4,8 +4,8 @@ const allowedCors = [
   'localhost:3000',
   'https://donvladon.nomoredomains.rocks',
   'http://donvladon.nomoredomains.rocks',
-  'https://api.donvladon.nomoredomains.rocks/',
-  'http://api.donvladon.nomoredomains.rocks/,',
+  'https://api.donvladon.nomoredomains.rocks',
+  'http://api.donvladon.nomoredomains.rocks,',
 ];
 
 const cors = (req, res, next) => {
