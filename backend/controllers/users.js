@@ -83,7 +83,6 @@ module.exports.createUser = (req, res, next) => {
         email,
         password: hash,
       })
-        .orFail()
         .then((user) => {
           const NewUserObj = user.toObject();
           delete NewUserObj.password;
@@ -111,8 +110,7 @@ module.exports.updateProfile = (req, res, next) => {
       new: true,
       runValidators: true,
     },
-  )
-    .orFail()
+  ).orFail()
     .then((user) => {
       if (!user) {
         throw new NotFoundError404('User is not found');
@@ -135,8 +133,7 @@ module.exports.updateAvatar = (req, res, next) => {
     req.user._id,
     { avatar },
     { new: true, runValidators: true },
-  )
-    .orFail()
+  ).orFail()
     .then((user) => {
       if (!user) {
         throw new NotFoundError404('User is not found');

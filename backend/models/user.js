@@ -10,14 +10,14 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       default: 'Жак-Ив Кусто',
-      minlength: 2,
-      maxlength: 30,
+      minlength: [2, 'Минимальная длинна поля - 2 символа.'],
+      maxlength: [30, 'Максимальная длинна поля - 30 символов.'],
     },
     about: {
       type: String,
       default: 'Исследователь',
-      minlength: 2,
-      maxlength: 30,
+      minlength: [2, 'Минимальная длинна поля - 2 символа.'],
+      maxlength: [30, 'Максимальная длинна поля - 30 символов.'],
     },
     avatar: {
       type: String,

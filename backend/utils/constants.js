@@ -11,8 +11,10 @@ const {
   HTTP_STATUS_FORBIDDEN,
 } = http2.constants;
 
+const NOT_FOUND_ERROR = '404 Not Found';
 const REGEX_URL = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 module.exports = {
+  NotFoundError: NOT_FOUND_ERROR,
   REGEX_URL,
   HTTP_STATUS_CREATED,
   HTTP_STATUS_BAD_REQUEST,
