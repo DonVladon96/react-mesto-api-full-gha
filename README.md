@@ -11,6 +11,6 @@
 
 IP 62.84.127.180
 
-Frontend [https://...](https://donvladon.nomoredomains.rocks/sign-in)
+Frontend [https://donvladon.nomoredomains.rocks/sign-in]
 
-Backend [https://...](https://api.donvladon.nomoredomains.rocks/)
+Backend [https://api.donvladon.nomoredomains.rocks]
