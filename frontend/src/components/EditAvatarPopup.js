@@ -1,24 +1,21 @@
-import { useEffect, useState } from 'react';
+import {useContext, useEffect, useState} from 'react';
 import PopupWithForm from './PopupWithForm';
+import {CurrentUserContext} from "../contexts/CurrentUserContext";
+import useFormValidation from "../utils/validations";
 
-function EditAvatarPopup(props) {
+function EditAvatarPopup({onSubmit, isOpen, isClosed}) {
+	const currentUser = useContext(CurrentUserContext);
 
-	const [avatar, setAvatar] = useState('');
+	const { values, errors, onChange, restartForm } = useFormValidation();
 
 	useEffect(() => {
-		setAvatar('');
-	}, [props.isOpen]);
+		restartForm();
+	}, [isOpen]);
 
 	function useSubmit(evt) {
 		evt.preventDefault();
 
-		props.onSubmit({ avatar });
-
-		setAvatar('');
-	}
-
-	function useChanglerAvatar(evt) {
-		setAvatar(evt.target.value);
+		onSubmit(values);
 	}
 
 	return (
@@ -26,8 +23,8 @@ function EditAvatarPopup(props) {
 			name='avatar'
 			title='Обновить аватар'
 			buttonText='Сохранить'
-			isOpen={props.isOpen}
-			isClosed={props.isClosed}
+			isOpen={isOpen}
+			isClosed={isClosed}
 			onSubmit={useSubmit}
 		>
 			<input
@@ -37,11 +34,11 @@ function EditAvatarPopup(props) {
 				className='popup__input popup__input_avatar-link'
 				id='avatar-link'
 				required=''
-				onChange={useChanglerAvatar}
-				value={avatar || ''}
+				onChange={onChange}
+				value={values.avatar || ''}
 			/>
 			<span className='avatar-link-error popup__input-error'>
-				вы пропустили поле.
+				{errors.avatar || ''}
 			</span>
 		</PopupWithForm>
 	);

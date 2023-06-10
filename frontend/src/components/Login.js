@@ -45,6 +45,7 @@ function Login({  onLogin }) {
 							onChange={onChange}
 							required
 						/>
+						<span className='initial-window__input-error'>{errors.password || ''}</span>
 						<button type='submit' className='initial-window__submit-button'>
 							Вход
 						</button>

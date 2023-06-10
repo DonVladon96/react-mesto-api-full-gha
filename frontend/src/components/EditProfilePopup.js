@@ -1,31 +1,24 @@
 import { useEffect, useState, useContext } from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import PopupWithForm from './PopupWithForm';
+import useFormValidation from "../utils/validations";
 
-function EditProfilePopup(props) {
+function EditProfilePopup({ isOpen , isClosed, onUpdateUser}) {
 	const currentUser = useContext(CurrentUserContext);
-	const [name, setName] = useState(currentUser.name);
-	const [description, setDescription] = useState(currentUser.about);
+
+	const {values, errors, onChange, restartForm } = useFormValidation();
 
 	useEffect(() => {
-		return () => {
-			setName(currentUser.name);
-			setDescription(currentUser.about);
-		};
-	}, [currentUser, props.isOpen, props.isClosed]);
+		if (currentUser) {
+			restartForm(currentUser);
+		}
+	}, [currentUser, isOpen, isClosed]);
 
-	function handleEditName(evt) {
-		setName(evt.target.value);
-	}
 
 	function handleSubmitChange(evt) {
 		evt.preventDefault();
 
-		props.onUpdateUser({ name, about: description });
-	}
-
-	function handleEditDescription(evt) {
-		setDescription(evt.target.value);
+		onUpdateUser(values);
 	}
 
 	return (
@@ -33,8 +26,8 @@ function EditProfilePopup(props) {
 			name='user'
 			title='Редактировать профиль'
 			buttonText='Сохранить'
-			isOpen={props.isOpen}
-			isClosed={props.isClosed}
+			isOpen={isOpen}
+			isClosed={isClosed}
 			onSubmit={handleSubmitChange}
 		>
 			<input
@@ -46,11 +39,11 @@ function EditProfilePopup(props) {
 				minLength={2}
 				maxLength={40}
 				required=''
-				onChange={handleEditName}
-				value={name || ''}
+				onChange={onChange}
+				value={values.name || ''}
 			/>
 			<span className='input-name-error popup__input-error'>
-				вы пропустили поле.
+				{errors.name || ''}
 			</span>
 			<input
 				type='text'
@@ -61,11 +54,11 @@ function EditProfilePopup(props) {
 				minLength={2}
 				maxLength={200}
 				required=''
-				onChange={handleEditDescription}
-				value={description || ''}
+				onChange={onChange}
+				value={values.about || ''}
 			/>
 			<span className='input-job-error popup__input-error'>
-				вы пропустили поле.
+				{errors.name || ''}
 			</span>
 		</PopupWithForm>
 	);

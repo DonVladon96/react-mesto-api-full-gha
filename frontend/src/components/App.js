@@ -27,7 +27,6 @@ function App() {
     const [isCardOpen, setCardOpen] = useState(false);
     const [isSelectedCard, setSelectedCard] = useState({name: '', link: ''});
     const [isLoading, setIsLoading] = useState(true);
-    // Создайте стейт currentUser в корневом компоненте
     const [currentUser, setCurrentUser] = useState({});
 
     const [cards, setCard] = useState([]);
@@ -57,6 +56,7 @@ function App() {
                     text: 'Вы успешно вошли!',
                     isSuccess: true
                 })
+                setTimeout(closeAllPopups, 1500);
             })
             .catch(() => {
                 const text = 'Что-то пошло не так! Попробуйте еще раз.';
@@ -137,7 +137,7 @@ function App() {
 
     function handleOpenCardClick(cardsData) {
         setCardOpen(true);
-        setSelectedCard({name: cardsData, link: cardsData.link});
+        setSelectedCard({name: cardsData.name, link: cardsData.link});
     }
 
     function handleConfirmDeletePopup(card) {
@@ -174,12 +174,9 @@ function App() {
     function handleCardLike(card) {
         const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
-        api.addLike(card._id, !isLiked)
-            .then((newCard) => {
-                setCard((state) =>
-                    state.map((c) => (c._id === card._id ? newCard : c))
-                );
-            })
+        api.toggleLike(card._id, !isLiked).then((newCard) => {
+            setCard((state) => state.map((c) => c._id === card._id ? newCard : c));
+        })
             .catch((err) => {
                 console.log(`Ошибка: ${err}`);
             });
@@ -191,7 +188,6 @@ function App() {
         api.parseUserInfo({name: values.name, about: values.about})
             .then((response) => {
                 setCurrentUser(response);
-                setIsLoading(true);
                 closeAllPopups();
             })
             .catch((err) => {
@@ -216,7 +212,7 @@ function App() {
 
 
     function handleAddPlacePopup(values) {
-        setIsLoading(false);
+        setIsLoading(true);
 
         api.createCard({name: values.name, link: values.link})
             .then((newCard) => {
@@ -226,7 +222,7 @@ function App() {
             .catch((err) => {
                 console.log(`Ошибка: ${err}`);
             })
-            .finally(() => setIsLoading(true));
+            .finally(() => setIsLoading(false));
     }
 
     function handleCardDelete(event) {
@@ -237,13 +233,13 @@ function App() {
         api
             .deleteCard(currentCard._id)
             .then(() => {
-                setCard(cards.filter((i) => i !== currentCard));
+                setCard(cards.filter((c) => c !== currentCard));
                 closeAllPopups();
             })
             .catch((err) => {
                 console.log(`Ошибка: ${err}`);
             })
-            .finally(() => setIsLoading(true));
+            .finally(() => setIsLoading(false));
     }
 
     function closePopupsOnOutsideClick(evt) {
@@ -310,6 +306,7 @@ function App() {
                     isOpen={isEditProfilePopupOpen}
                     isClosed={closeAllPopups}
                     onUpdateUser={handleUpdateUser}
+                    currentUser={currentUser}
                 ></EditProfilePopup>
                 {/* для добавления карточек */}
                 <AddPlacePopup

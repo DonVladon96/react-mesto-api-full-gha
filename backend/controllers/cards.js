@@ -1,21 +1,12 @@
 const http2 = require('http2');
+const { Error } = require('mongoose');
 const Card = require('../models/card');
 const { NotFoundError404, ForbiddenError, BadRequestError } = require('../utils/errors');
-const {Error} = require("mongoose");
 
 const {
   HTTP_STATUS_CREATED,
   HTTP_STATUS_OK,
 } = http2.constants;
-
-module.exports.getCards = (req, res, next) => {
-  Card.find({})
-    .populate(['owner', 'likes'])
-    .then((cards) => {
-      res.send(cards);
-    })
-    .catch(next);
-};
 
 module.exports.createCard = (req, res, next) => {
   const { _id } = req.user;
@@ -32,10 +23,21 @@ module.exports.createCard = (req, res, next) => {
     });
 };
 
+module.exports.getCards = (req, res, next) => {
+  Card.find({})
+    .populate(['owner', 'likes'])
+    .then((card) => {
+      res.send(card);
+    })
+    .catch(next);
+};
+
 module.exports.cardDelete = (req, res, next) => {
   const { cardId } = req.params;
   return Card.findById(cardId)
-    .orFail(new NotFoundError404(`Card Id: ${cardId} is not found`))
+    .orFail(() => {
+      NotFoundError404(`Card Id: ${cardId} is not found`);
+    })
     .then((card) => {
       if (card.owner.toString() === req.user._id) {
         Card.deleteOne({ _id: cardId })
@@ -56,7 +58,8 @@ module.exports.cardDelete = (req, res, next) => {
 
 module.exports.likeCard = (req, res, next) => {
   const { cardId } = req.params;
-  Card.findByIdAndUpdate(
+
+  return Card.findByIdAndUpdate(
     cardId,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
@@ -75,7 +78,7 @@ module.exports.dislikeCard = (req, res, next) => {
   const { cardId } = req.params;
   Card.findByIdAndUpdate(
     cardId,
-    { $pull: { likes: req.user._id } }, // убрать _id из массива
+    { $pull: { likes: req.user._id } },
     { new: true },
   )
     .populate(['owner', 'likes'])

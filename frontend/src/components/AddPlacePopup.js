@@ -1,70 +1,60 @@
-import { useEffect, useState } from 'react';
+import {useEffect} from 'react';
 import PopupWithForm from './PopupWithForm';
+import useFormValidation from "../utils/validations";
 
-function AddPlacePopup(props) {
-	const [cardName, setCardName] = useState('');
-	const [cardLink, setCardLink] = useState('');
+function AddPlacePopup({isClosed, onAddCards, isOpen}) {
+    const {values, errors, onChange, restartForm} = useFormValidation();
 
-	function handleSubmit(e) {
-		e.preventDefault();
+    function handleSubmit(e) {
+        e.preventDefault();
 
-		props.onAddCards({ name: cardName, link: cardLink });
-	}
+        onAddCards(values);
+    }
 
-	useEffect(() => {
-		return () => {
-			setCardName('');
-			setCardLink('');
-		};
-	}, [props.isOpen]);
+    useEffect(() => {
+        restartForm();
+    }, [isOpen]);
 
-	function handlePutName(evt) {
-		setCardName(evt.target.value);
-	}
 
-	function handlePutLink(evt) {
-		setCardLink(evt.target.value);
-	}
-
-	return (
-		<PopupWithForm
-			name='cardName'
-			title='Новое место'
-			buttonText='Создать'
-			isOpen={props.isOpen}
-			isClosed={props.isClosed}
-			onSubmit={handleSubmit}
-		>
-			<input
-				type='text'
-				name='cardName'
-				placeholder='Название?'
-				className='popup__input'
-				id='card-name'
-				minLength={2}
-				maxLength={30}
-				required=''
-				onChange={handlePutName}
-				value={cardName}
-			/>
-			<span className='card-name-error popup__input-error'>
-				вы пропустили поле.
+    return (
+        <PopupWithForm
+            name='cardName'
+            title='Новое место'
+            buttonText='Создать'
+            isOpen={isOpen}
+            isClosed={isClosed}
+            onSubmit={handleSubmit}
+        >
+            <input
+                type='text'
+                name='name'
+                placeholder='Название?'
+                className='popup__input'
+                id='card-name'
+                minLength='2'
+                maxLength='30'
+                required
+                onChange={onChange}
+                value={values.name || ''}
+            />
+            <span className='card-name-error popup__input-error'>
+				{errors.name || ''}
 			</span>
-			<input
-				type='url'
-				name='cardLink'
-				placeholder='Ссылка на картинку'
-				className='popup__input'
-				id='card-link'
-				required=''
-				onChange={handlePutLink}
-				value={cardLink}
-			/>
-			<span className='card-link-error popup__input-error'>
-				вы пропустили поле.
+            <input
+                type='url'
+                name='link'
+                placeholder='Ссылка на картинку'
+                className='popup__input'
+                id='card-link'
+                required
+                onChange={onChange}
+                value={values.link || ''}
+            />
+            <span className='card-link-error popup__input-error'>
+				{errors.link || ''}
 			</span>
-		</PopupWithForm>
-	);
+        </PopupWithForm>
+    );
 }
 
 export default AddPlacePopup;

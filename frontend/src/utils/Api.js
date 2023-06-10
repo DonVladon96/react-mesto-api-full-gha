@@ -7,11 +7,10 @@ export default class Api {
 	getInitialCards() {
 		return fetch(`${this._url}/cards`, {
 			headers: this._headers
-		})
-			.then(this._getResponse)
+		}).then(this._getResponse)
 	}
 
-	createCard({name, link}) {
+	createCard({ name, link }) {
 		return fetch(`${this._url}/cards`, {
 			headers: this._headers,
 			method: "POST",
@@ -60,12 +59,12 @@ export default class Api {
 		})
 			.then(this._getResponse)
 	}
-	addLike(id, isLiked) {
-		return fetch(`${this._url}/cards/${id}/likes/`, {
-			method: isLiked ? 'PUT' : 'DELETE',
-			headers: this._headers
+	toggleLike(id, isLiked) {
+		return fetch(`${this._url}/cards/${id}/likes`, {
+			headers: this._headers,
+			method: isLiked ? "PUT" : "DELETE",
 		})
-			.then(this._getResponse);
+			.then(this._getResponse)
 	}
 
 	_getResponse(res) {
