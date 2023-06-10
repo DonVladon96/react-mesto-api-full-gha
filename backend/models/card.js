@@ -22,15 +22,14 @@ const cardSchema = new mongoose.Schema(
       ref: 'user',
       required: [true, 'Поле name обязательно к заполнению.'],
     },
-    likes: {
-      type: [mongoose.Schema.Types.ObjectId],
+    likes: [{
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
       default: [],
-    },
+    }],
     createdAt: {
       type: Date,
-      default: new Date(),
-      required: true,
+      default: Date.now,
     },
   },
   {
