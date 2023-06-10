@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const bcrypt = require('bcrypt');
 const validator = require('validator');
-const { expression } = require('../utils/constants');
+const { REGEX_URL } = require('../utils/constants');
 const ErrorUnauthorized = require('../utils/errors/Unauthorized-error-401');
 
 const userSchema = new mongoose.Schema(
@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
       validate: {
-        validator: (url) => expression.test(url),
+        validator: (url) => REGEX_URL.test(url),
         message: 'Некорректный URL адрес.',
       },
     },
@@ -47,6 +47,7 @@ const userSchema = new mongoose.Schema(
   },
 );
 
+// eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {

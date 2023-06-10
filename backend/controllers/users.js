@@ -84,6 +84,7 @@ module.exports.createUser = (req, res, next) => {
         email,
         password: hash,
       })
+        .orFail()
         .then((user) => {
           const NewUserObj = user.toObject();
           delete NewUserObj.password;
@@ -112,6 +113,7 @@ module.exports.updateProfile = (req, res, next) => {
       runValidators: true,
     },
   )
+    .orFail()
     .then((user) => {
       if (!user) {
         throw new NotFoundError404('User is not found');
@@ -119,7 +121,7 @@ module.exports.updateProfile = (req, res, next) => {
       res.status(HTTP_STATUS_OK).send(user);
     })
     .catch((err) => {
-      if (err instanceof Error.CastError || err.name === 'ValidationError') {
+      if (err.name === 'ValidationError') {
         next(new BadRequestError('Введены некорректные данные'));
       } else {
         next(err);
@@ -135,6 +137,7 @@ module.exports.updateAvatar = (req, res, next) => {
     { avatar },
     { new: true, runValidators: true },
   )
+    .orFail()
     .then((user) => {
       if (!user) {
         throw new NotFoundError404('User is not found');

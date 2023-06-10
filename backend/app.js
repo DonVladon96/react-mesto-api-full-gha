@@ -5,7 +5,6 @@ const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
 
 const cors = require('cors');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
 const routes = require('./routes');
 const errorMiddlewares = require('./middlewares/errorMiddlewares');
 const auth = require('./middlewares/auth');
@@ -52,7 +51,6 @@ app.post('/signup', signupValidate, createUser);
 app.use(auth);
 app.use(routes);
 
-app.use(errorLogger);
 app.use(errors());
 app.use(errorMiddlewares);
 
