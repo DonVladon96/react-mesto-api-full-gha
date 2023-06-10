@@ -9,13 +9,13 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      default: 'Don Vladon',
+      default: 'Жак-Ив Кусто',
       minlength: [2, 'Минимальная длинна поля - 2 символа.'],
       maxlength: [30, 'Максимальная длинна поля - 30 символов.'],
     },
     about: {
       type: String,
-      default: 'web-developer',
+      default: 'Исследователь',
       minlength: [2, 'Минимальная длинна поля - 2 символа.'],
       maxlength: [30, 'Максимальная длинна поля - 30 символов.'],
     },
