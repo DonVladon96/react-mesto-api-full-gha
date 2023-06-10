@@ -15,11 +15,7 @@ const { PORT = 3000 } = process.env;
 
 require('dotenv').config();
 
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb').then(() => {
-  console.log('Connected to database.');
-}).catch((error) => {
-  console.error('Error connecting to database:', error);
-});
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
 const app = express();
 
@@ -27,7 +23,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors());
-app.use(requestLogger);
 
 app.get('/crash-test', () => {
   setTimeout(() => {

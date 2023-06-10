@@ -31,7 +31,6 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.getUsers = (req, res, next) => {
-  console.log('Hello Vald');
   User.find({})
     .then((user) => res.send(user))
     .catch(next);
