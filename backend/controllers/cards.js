@@ -26,9 +26,7 @@ module.exports.createCard = (req, res, next) => {
 module.exports.getCards = (req, res, next) => {
   Card.find({})
     .populate(['owner', 'likes'])
-    .then((card) => {
-      res.send(card);
-    })
+    .then((card) => res.send(card))
     .catch(next);
 };
 
@@ -36,7 +34,7 @@ module.exports.cardDelete = (req, res, next) => {
   const { cardId } = req.params;
   return Card.findById(cardId)
     .orFail(() => {
-      NotFoundError404(`Card Id: ${cardId} is not found`);
+      throw new NotFoundError404(`Card Id: ${cardId} is not found`);
     })
     .then((card) => {
       if (card.owner.toString() === req.user._id) {
@@ -61,8 +59,12 @@ module.exports.likeCard = (req, res, next) => {
 
   return Card.findByIdAndUpdate(
     cardId,
-    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
-    { new: true },
+    {
+      $addToSet: { likes: req.user._id },
+    },
+    {
+      new: true,
+    },
   )
     .populate(['owner', 'likes'])
     .orFail(() => {

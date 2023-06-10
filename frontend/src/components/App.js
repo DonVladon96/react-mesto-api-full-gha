@@ -319,17 +319,20 @@ function App() {
                     card={isSelectedCard}
                     isOpen={isCardOpen}
                     isClosed={closeAllPopups}
+                    closePopupsOnOutsideClick={closePopupsOnOutsideClick}
                 ></ImagePopup>
                 {/* для подтверждения удаления  */}
                 <PopupWithVerification
                     isOpen={isConfirmDeletePopup}
                     isClosed={closeAllPopups}
                     onSubmit={handleCardDelete}
+                    closePopupsOnOutsideClick={closePopupsOnOutsideClick}
                 ></PopupWithVerification>{' '}
                 <InfoTooltip
                     message={isInfoMessage}
                     isClosed={closeAllPopups}
                     closePopupsOnOutsideClick={closePopupsOnOutsideClick}
+
                 />
             </div>
         </CurrentUserContext.Provider>

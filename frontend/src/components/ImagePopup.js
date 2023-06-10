@@ -1,10 +1,11 @@
 import React from 'react';
 
 
-function ImagePopup({isOpen, isClosed, card}) {
+function ImagePopup({isOpen, isClosed, card, closePopupsOnOutsideClick}) {
 	return (
 		<div
 			className={`popup popup_image-open ${isOpen ? 'popup_opened' : ''}`}
+			onClick={closePopupsOnOutsideClick}
 		>
 			<div className='popup__container popup__container_image'>
 				<button

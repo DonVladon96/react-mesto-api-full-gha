@@ -3,12 +3,15 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function Card({ card, openCard, deleteCard, cardLike }) {
 	const currentUser = useContext(CurrentUserContext);
-
 	// Определяем, есть ли у карточки лайк, поставленный текущим пользователем
 	const isLiked = card.likes.some(i => i._id === currentUser._id);
-
 	// Определяем, являемся ли мы владельцем текущей карточки
 	const isOwn = (card.owner._id || card.owner) === currentUser._id;
+	const deleteIfOwner = `element__button-trash ${isOwn ? `element__button-trash_visible` : ''}`;
+	const likeActive = `element__button-like ${
+		isLiked ? `element__button-like_active` : ''
+	}`
+
 
 	function handleClickCard() {
 		openCard(card);
@@ -27,8 +30,8 @@ function Card({ card, openCard, deleteCard, cardLike }) {
 			<button
 				type='button'
 				aria-label='button-delete'
-				className={`element__button-trash ${isOwn ? `element__button-trash_visible` : ''}`}
 				onClick={handleDeleteClick}
+				className={deleteIfOwner}
 			/>
 			<img
 				src={card.link}
@@ -42,9 +45,7 @@ function Card({ card, openCard, deleteCard, cardLike }) {
 					<button
 						type='button'
 						aria-label='Like'
-						className={`element__button-like ${
-							isLiked ? `element__button-like_active` : ''
-						}`}
+						className={likeActive}
 						onClick={handleLikeClick}
 					/>
 					<div className='element__like-number'>{card.likes.length}</div>
