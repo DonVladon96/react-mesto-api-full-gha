@@ -54,7 +54,7 @@ function App() {
                 navigate('/');
                 setInfoMessage('Вы успешно вошли!')
                 handleShowInfoMessage({
-                    text: 'Вы успешно зарегистрировались!',
+                    text: 'Вы успешно вошли!',
                     isSuccess: true
                 })
             })
